@@ -1,5 +1,11 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-    TODO
+    <a href="{% url 'posts' %}">posts</a>
+    <div id="posts-display">post will appear here</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/posts.js' 1 %}"></script>
 {% endblock %}

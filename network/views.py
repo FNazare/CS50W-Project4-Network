@@ -1,10 +1,37 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post, Like, Follow
+
+#TODO def compose(request):
+
+def posts(request, user_id = None):
+    if user_id == None:
+        # Returns all posts
+        posts = Post.objects.all()
+        return JsonResponse ([post.serialize() for post in posts], safe=False)
+    else:
+        # Check if user exists
+        try:
+            user = User.objects.get(id=user_id)
+        except:
+            return JsonResponse ({"error": "user does not exist"})
+
+        # Create list of people being followed by the user
+        follows = []
+        for follow in user.follows.all():
+            follows.append(follow.user)
+
+        # From the list of people, aggregate those people posts
+        posts = []
+        for person in follows:
+            for p in person.posts.all():
+                posts.append(p)
+        return JsonResponse ([post.serialize() for post in posts], safe=False)
+
 
 
 def index(request):
