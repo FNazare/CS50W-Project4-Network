@@ -1,13 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // Get user id. This id is going to be load the posts the user is following
-    var userId = document.querySelector('#userId').value
+    try {
+        var userId = document.querySelector('#userId').value
+    }
+    // If user is not logged in, there is no ID
+    catch (TypeError) {
+        var userId = ''
+    }
+    
 
     // Buttons
     document.querySelector('#all_posts').addEventListener('click', () => load_posts(''));
     document.querySelector('#following_posts').addEventListener('click', () => load_posts(userId));
 
-
+    // By default, load all posts
+    load_posts('')
 })
 
 function load_posts(user_id) {
@@ -32,7 +40,7 @@ function load_posts(user_id) {
 
                 //  Poster
                 item = document.createElement("li")
-                item.innerHTML = '<b>' + element.poster + '</b>' + ' says:'
+                item.innerHTML = '<b>' + element.poster + '</b>' + ' sayd:'
                 one_post.append(item)
 
                 // Content
@@ -50,12 +58,6 @@ function load_posts(user_id) {
                 item.innerHTML = `&hearts; ` + element.likes;
                 one_post.append(item)
 
-
-
-
-
-
-                //posts_container.appendChild(one_post)
                 posts_container.append(one_post)
             });
 
