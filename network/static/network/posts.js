@@ -27,9 +27,36 @@ function load_posts(user_id) {
             var posts_container = document.createElement("div")
 
             posts.forEach(element => {
-                var one_post = document.createElement("div")
-                one_post.innerHTML = element.content
-                posts_container.appendChild(one_post)
+                var one_post = document.createElement("ul")
+                one_post.className = "one_post"
+
+                //  Poster
+                item = document.createElement("li")
+                item.innerHTML = '<b>' + element.poster + '</b>' + ' says:'
+                one_post.append(item)
+
+                // Content
+                item = document.createElement("li")
+                item.innerHTML = element.content
+                one_post.append(item)
+
+                // Timestamp
+                item = document.createElement("li")
+                item.innerHTML = '<small>' + element.timestamp + '</small>'
+                one_post.append(item)
+
+                // Likes
+                item = document.createElement("li")
+                item.innerHTML = `&hearts; ` + element.likes;
+                one_post.append(item)
+
+
+
+
+
+
+                //posts_container.appendChild(one_post)
+                posts_container.append(one_post)
             });
 
             document.querySelector('#posts-display').appendChild(posts_container)
