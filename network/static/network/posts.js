@@ -40,7 +40,7 @@ function load_posts(user_id) {
 
                 //  Poster
                 item = document.createElement("li")
-                item.innerHTML = '<b>' + element.poster + '</b>' + ' sayd:'
+                item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
                 one_post.append(item)
 
                 // Content
