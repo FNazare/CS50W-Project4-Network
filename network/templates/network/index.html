@@ -2,9 +2,19 @@
 {% load static %}
 
 {% block body %}
+    {% if user.is_authenticated %}
+    <div id="compose">
+        <form action="new_post" method="post">
+                <label>New Post...</label>
+                <input type="text" name="content" maxlength="255" class="form-control" placeholder="What do you want to share?">
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
+    {% endif %}
+
     <div id="posts-display">No posts.</div>
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/posts.js' 1 %}"></script>
+    <script src="{% static 'network/posts.js' %}"></script>
 {% endblock %}

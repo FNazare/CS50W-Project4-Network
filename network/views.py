@@ -1,14 +1,25 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post, Like, Follow
 
-#TODO def compose(request):
+@csrf_exempt
+@login_required
+def compose(request):
+    if request.method == 'POST':
+        p = Post (content=request.POST["content"], user=request.user)
+        print(p)
+        p.save()
+        return HttpResponseRedirect(reverse('index'))
+
 
 def posts(request, user_id = None):
+
     if user_id == None:
         # Returns all posts
         posts = Post.objects.all()

@@ -6,3 +6,12 @@ ul {
 .one_post {
     border: solid rgb(230, 230, 230);
 }
+
+#compose {
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 50%;
+}
