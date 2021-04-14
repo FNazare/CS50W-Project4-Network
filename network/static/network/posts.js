@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Get user id. This id is going to be load the posts the user is following
+    // Get user id. This ID is going to be used to load the posts from people the user is following
     try {
         var userId = document.querySelector('#userId').value
     }
@@ -12,30 +12,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Buttons
     document.querySelector('#all_posts').addEventListener('click', () => load_posts(''));
-    document.querySelector('#following_posts').addEventListener('click', () => load_posts(userId));
+    document.querySelector('#following_posts').addEventListener('click', () => load_posts_follows(userId));
 
     // By default, load all posts
     load_posts('')
 })
 
-function load_posts(user_id) {
-
-    // user_id will be used to fetch the API
-    if (user_id){
-        user_id = '/' + user_id
-    }
+// Loads posts from people the user(user_id) follows
+function load_posts_follows(user_id) {
+    
+    console.log("Work in progress")
 
     //clear container
     document.querySelector('#posts-display').innerHTML = ""
 
     // Fetch posts.
-    fetch('posts' + user_id)
+    fetch('following/' + user_id)
     .then(response => response.json())
     .then(posts => {
-        posts = posts.reverse()
         
+        // Posts are going to be stored here
         var posts_container = document.createElement("div")
 
+        // Store each post on the container
         posts.forEach(element => {
             var one_post = document.createElement("ul")
             one_post.className = "one_post"
@@ -60,10 +59,71 @@ function load_posts(user_id) {
             item.innerHTML = `&hearts; ` + element.likes;
             one_post.append(item)
 
-            posts_container.append(one_post)
-        });
 
-        document.querySelector('#posts-display').appendChild(posts_container)
+            posts_container.append(one_post)
         }
+        );
+
+        // Render posts on the page
+        document.querySelector('#posts-display').appendChild(posts_container)
+    }
+    )
+}
+
+
+// To load posts from all users: user_id should be an empty string
+// To load posts from specifi user: specify the user_id
+function load_posts(user_id) {
+
+    // user_id will be used to fetch the API
+    if (user_id){
+        user_id = '/' + user_id
+    }
+
+    //clear container
+    document.querySelector('#posts-display').innerHTML = ""
+
+    // Fetch posts.
+    fetch('posts' + user_id)
+    .then(response => response.json())
+    .then(posts => {
+        posts = posts.reverse()
+        
+        // Posts are going to be stored here
+        var posts_container = document.createElement("div")
+
+        // Store each post on the container
+        posts.forEach(element => {
+            var one_post = document.createElement("ul")
+            one_post.className = "one_post"
+
+            //  Poster
+            item = document.createElement("li")
+            item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
+            one_post.append(item)
+
+            // Content
+            item = document.createElement("li")
+            item.innerHTML = element.content
+            one_post.append(item)
+
+            // Timestamp
+            item = document.createElement("li")
+            item.innerHTML = '<small>' + element.timestamp + '</small>'
+            one_post.append(item)
+
+            // Likes
+            item = document.createElement("li")
+            item.innerHTML = `&hearts; ` + element.likes;
+            one_post.append(item)
+
+
+            posts_container.append(one_post)
+        }
+        );
+
+        // Render posts on the page
+        document.querySelector('#posts-display').appendChild(posts_container)
+    }
     )
 }

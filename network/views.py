@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post, Like, Follow
+from .util import get_posts
 
 @csrf_exempt
 @login_required
@@ -18,12 +19,30 @@ def compose(request):
         return HttpResponseRedirect(reverse('index'))
 
 
+def following(request, user_id):
+    # Get posts from people the user is following
+    try:
+        user = User.objects.get(id=user_id)
+    except:
+        return JsonResponse ({"error": "user does not exist"})
+
+    # Create list of people being followed by the user
+    follows = []
+    for follow in user.follows.all():
+        follows.append(follow.user)
+
+    # From the list of people, aggregate those people posts
+    posts = []
+    posts = get_posts(follows)
+    return JsonResponse ([post.serialize() for post in posts], safe=False)
+
 def posts(request, user_id = None):
 
     if user_id == None:
         # Returns all posts
         posts = Post.objects.all()
         return JsonResponse ([post.serialize() for post in posts], safe=False)
+    # Get user posts
     else:
         # Check if user exists
         try:
@@ -31,16 +50,8 @@ def posts(request, user_id = None):
         except:
             return JsonResponse ({"error": "user does not exist"})
 
-        # Create list of people being followed by the user
-        follows = []
-        for follow in user.follows.all():
-            follows.append(follow.user)
-
-        # From the list of people, aggregate those people posts
         posts = []
-        for person in follows:
-            for p in person.posts.all():
-                posts.append(p)
+        posts = get_posts([user])
         return JsonResponse ([post.serialize() for post in posts], safe=False)
 
 
