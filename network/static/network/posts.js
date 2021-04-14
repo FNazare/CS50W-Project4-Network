@@ -18,11 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
     load_posts('')
 })
 
-// Loads posts from people the user(user_id) follows
+
+// Loads posts from people the user(user_id) is following
 function load_posts_follows(user_id) {
     
-    console.log("Work in progress")
-
     //clear container
     document.querySelector('#posts-display').innerHTML = ""
 
@@ -31,41 +30,11 @@ function load_posts_follows(user_id) {
     .then(response => response.json())
     .then(posts => {
         
-        // Posts are going to be stored here
-        var posts_container = document.createElement("div")
-
-        // Store each post on the container
-        posts.forEach(element => {
-            var one_post = document.createElement("ul")
-            one_post.className = "one_post"
-
-            //  Poster
-            item = document.createElement("li")
-            item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
-            one_post.append(item)
-
-            // Content
-            item = document.createElement("li")
-            item.innerHTML = element.content
-            one_post.append(item)
-
-            // Timestamp
-            item = document.createElement("li")
-            item.innerHTML = '<small>' + element.timestamp + '</small>'
-            one_post.append(item)
-
-            // Likes
-            item = document.createElement("li")
-            item.innerHTML = `&hearts; ` + element.likes;
-            one_post.append(item)
-
-
-            posts_container.append(one_post)
-        }
-        );
+        // Structure posts
+        var grouped_posts = BuildPosts(posts)
 
         // Render posts on the page
-        document.querySelector('#posts-display').appendChild(posts_container)
+        document.querySelector('#posts-display').appendChild(grouped_posts)
     }
     )
 }
@@ -89,41 +58,48 @@ function load_posts(user_id) {
     .then(posts => {
         posts = posts.reverse()
         
-        // Posts are going to be stored here
-        var posts_container = document.createElement("div")
-
-        // Store each post on the container
-        posts.forEach(element => {
-            var one_post = document.createElement("ul")
-            one_post.className = "one_post"
-
-            //  Poster
-            item = document.createElement("li")
-            item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
-            one_post.append(item)
-
-            // Content
-            item = document.createElement("li")
-            item.innerHTML = element.content
-            one_post.append(item)
-
-            // Timestamp
-            item = document.createElement("li")
-            item.innerHTML = '<small>' + element.timestamp + '</small>'
-            one_post.append(item)
-
-            // Likes
-            item = document.createElement("li")
-            item.innerHTML = `&hearts; ` + element.likes;
-            one_post.append(item)
-
-
-            posts_container.append(one_post)
-        }
-        );
+        // Structure posts
+        var grouped_posts = BuildPosts(posts)
 
         // Render posts on the page
-        document.querySelector('#posts-display').appendChild(posts_container)
+        document.querySelector('#posts-display').appendChild(grouped_posts)
     }
     )
+}
+
+
+// Defines the structure of the posts to be rendered
+function BuildPosts(posts) {
+
+    // Posts are going to be stored here
+    var posts_container = document.createElement("div")
+
+    // Store each post on the container
+    posts.forEach(element => {
+        var one_post = document.createElement("ul")
+        one_post.className = "one_post"
+
+        //  Poster name
+        item = document.createElement("li")
+        item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
+        one_post.append(item)
+
+        // Content
+        item = document.createElement("li")
+        item.innerHTML = element.content
+        one_post.append(item)
+
+        // Timestamp
+        item = document.createElement("li")
+        item.innerHTML = '<small>' + element.timestamp + '</small>'
+        one_post.append(item)
+
+        // Likes
+        item = document.createElement("li")
+        item.innerHTML = `&hearts; ` + element.likes;
+        one_post.append(item)
+
+        posts_container.append(one_post)
+    });
+    return posts_container
 }
