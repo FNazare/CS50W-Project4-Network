@@ -71,35 +71,42 @@ function load_posts(user_id) {
 // Defines the structure of the posts to be rendered
 function BuildPosts(posts) {
 
-    // Posts are going to be stored here
-    var posts_container = document.createElement("div")
+    if (posts.length){
+    
+        // Posts are going to be stored here
+        var posts_container = document.createElement("div")
 
-    // Store each post on the container
-    posts.forEach(element => {
-        var one_post = document.createElement("ul")
-        one_post.className = "one_post"
+        // Store each post on the container
+        posts.forEach(element => {
+            var one_post = document.createElement("ul")
+            one_post.className = "one_post"
 
-        //  Poster name
-        item = document.createElement("li")
-        item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
-        one_post.append(item)
+            //  Poster name
+            item = document.createElement("li")
+            item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
+            one_post.append(item)
 
-        // Content
-        item = document.createElement("li")
-        item.innerHTML = element.content
-        one_post.append(item)
+            // Content
+            item = document.createElement("li")
+            item.innerHTML = element.content
+            one_post.append(item)
 
-        // Timestamp
-        item = document.createElement("li")
-        item.innerHTML = '<small>' + element.timestamp + '</small>'
-        one_post.append(item)
+            // Timestamp
+            item = document.createElement("li")
+            item.innerHTML = '<small>' + element.timestamp + '</small>'
+            one_post.append(item)
 
-        // Likes
-        item = document.createElement("li")
-        item.innerHTML = `&hearts; ` + element.likes;
-        one_post.append(item)
+            // Likes
+            item = document.createElement("li")
+            item.innerHTML = `&hearts; ` + element.likes;
+            one_post.append(item)
 
-        posts_container.append(one_post)
+            posts_container.append(one_post)
     });
+    }
+    else{
+        var posts_container = document.createElement("div")
+        posts_container.innerHTML = "<i>No posts to show.</i>"
+    }
     return posts_container
 }
