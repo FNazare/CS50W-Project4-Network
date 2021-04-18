@@ -15,3 +15,7 @@ ul {
 .form-control {
     width: 50%;
 }
+
+.show-as-clickable {
+    cursor: pointer;
+}

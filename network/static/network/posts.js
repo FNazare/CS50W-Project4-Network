@@ -11,10 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // Buttons
-    document.querySelector('#all_posts').addEventListener('click', () => load_posts(''));
-    document.querySelector('#following_posts').addEventListener('click', () => load_posts_follows(userId));
+    document.querySelector('#all_posts').addEventListener('click', () => {
+        document.querySelector('#profile-display').style.display = 'none';
+        load_posts('');
+    });
+    document.querySelector('#following_posts').addEventListener('click', () => {
+        document.querySelector('#profile-display').style.display = 'none';
+        load_posts_follows(userId)
+    });
 
-    // By default, load all posts
+    // By default, load all posts and hide profile display
+    //document.querySelector('#profile-display').style.display = 'none';
     load_posts('')
 })
 
@@ -83,7 +90,9 @@ function BuildPosts(posts) {
 
             //  Poster name
             item = document.createElement("li")
-            item.innerHTML = '<b>' + element.poster + '</b>' + ' said:'
+            item.innerHTML = '<b>' + element.poster + '</b>';
+            item.addEventListener('click', () => LoadProfile(element.poster_id))
+            item.className = "show-as-clickable";
             one_post.append(item)
 
             // Content
@@ -109,4 +118,16 @@ function BuildPosts(posts) {
         posts_container.innerHTML = "<i>No posts to show.</i>"
     }
     return posts_container
+}
+
+function LoadProfile(profile_id) {
+    // Populate user profile
+    document.querySelector('#profile-display').innerHTML = `user id: ${profile_id}`;
+
+    // After populating the profile, unhide it
+    document.querySelector('#profile-display').style.display = 'block';
+
+    // Load posts
+    load_posts(user_id);
+
 }
