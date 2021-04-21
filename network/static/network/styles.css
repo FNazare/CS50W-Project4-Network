@@ -12,6 +12,11 @@ ul {
     margin-bottom: 15px;
 }
 
+#profile-display {
+    padding: 10px;
+    background-color: rgb(203, 235, 255);
+}
+
 .form-control {
     width: 50%;
 }

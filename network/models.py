@@ -3,7 +3,20 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    def serialize(self, requester):
+        
+        try:
+            followers = self.followers.first().follower.all()
+        except:
+            followers = []
+
+        return {
+            "id": self.id,
+            "name": self.username,
+            "followers_count": self.followers.all().count(),
+            "is_following": True if requester in followers else False,
+            "following_count": self.follows.all().count()
+        }
 
 
 #POST
@@ -38,6 +51,3 @@ class Like(models.Model):
 class Follow(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='followers')
     follower = models.ManyToManyField("User", related_name='follows')
-
-    def __str__(self):
-        return f"{self.follower.all()} follows {self.user}"

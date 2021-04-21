@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // By default, load all posts and hide profile display
-    //document.querySelector('#profile-display').style.display = 'none';
+    document.querySelector('#profile-display').style.display = 'none';
     load_posts('')
 })
 
@@ -122,12 +122,58 @@ function BuildPosts(posts) {
 
 function LoadProfile(profile_id) {
     // Populate user profile
-    document.querySelector('#profile-display').innerHTML = `user id: ${profile_id}`;
+    fetch('profile/' + profile_id)
+    .then(response => response.json())
+    .then(user => {
+
+        var profile_container = document.createElement("div")
+
+        document.querySelector('#profile-display').innerHTML = `<b>${user.name}</b><br/>
+        followers count: <b>${user.followers_count}</b><br/>
+        is following: <b>${user.following_count}</b><br/>`;
+
+        // Confirm user is not visiting his own profile before rendering the follow button
+        if (user.id != userId.value){
+            // Add "follow/unfollow" button
+            var follow_button = document.createElement("button");
+            follow_button.type = "button";
+            follow_button.addEventListener('click', () => {
+
+                follow(user.id)
+
+                // Change follow/unfollow button
+                if (follow_button.innerHTML === "Unfollow") {
+                    follow_button.innerHTML = "Follow"
+                }
+                else if (follow_button.innerHTML === "Follow"){
+                    follow_button.innerHTML = "Unfollow"
+                }
+                
+            })
+
+            if (user.is_following) {
+                follow_button.innerHTML = "Unfollow"
+            }
+            else {
+                follow_button.innerHTML = "Follow"
+            }
+            document.querySelector('#profile-display').append(follow_button);
+        }
+    }
+    )
 
     // After populating the profile, unhide it
     document.querySelector('#profile-display').style.display = 'block';
 
     // Load posts
-    load_posts(user_id);
+    load_posts(profile_id);
 
 }
+
+// Toggle follow/unfollow
+function follow(person_id) {
+    fetch(`follow/${person_id}`, {
+        method: 'PUT'
+    })
+}
+

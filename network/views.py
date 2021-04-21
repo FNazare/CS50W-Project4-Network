@@ -9,6 +9,60 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, Post, Like, Follow
 from .util import get_posts
 
+
+
+@csrf_exempt
+@login_required
+def follow(request, profile_id):
+
+    if (request.method != "PUT"):
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+
+    # Follower can't be the same as person to be followed
+    if (profile_id == request.user.id):
+        return JsonResponse ({"error": "One cannot follow himself."})
+
+    # Check if profile exists
+    try:
+        profile = User.objects.get(pk=profile_id)
+    except:
+        return JsonResponse ({"error": "Profile to follow does not exist"})
+
+    # Check if profile already has followers
+    if (Follow.objects.filter(user=profile_id).first() == None):
+        # Create new Follow object and save
+        follow = Follow(user=profile)
+        follow.save()
+        follow.follower.add(request.user)
+        print(f"Created new Follow object for user -{profile}- and added -{request.user}- as follower")
+        return HttpResponse(status=204)
+    else:
+        follow = Follow.objects.filter(user=profile_id).first()
+
+    # list of Profile followers
+    followers = Follow.objects.filter(user=profile).first().follower.all()
+
+    # Check if the Profile is already being followed by user
+    if request.user in followers:
+        # Unfollow profile
+        follow.follower.remove(request.user)
+    else:
+        # Follow profile
+        follow.follower.add(request.user)
+    return HttpResponse(status=204)
+
+@login_required
+def profile(request, user_id):
+    # Get user
+    try:
+        u = User.objects.get(pk=user_id)
+    except:
+        return JsonResponse ({"error": "user does not exist"})
+    # Return serialized
+    return JsonResponse(u.serialize(request.user))
+
 @csrf_exempt
 @login_required
 def compose(request):
