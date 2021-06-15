@@ -10,7 +10,7 @@ This project is part of the [CS50’s Web Programming with Python and JavaScript
 
 If you have Python and Pip already installed:
 ```bash
-python -m pip install Django
+python3 -m pip install Django
 ```
 or follow [Django's Official Documentation](https://docs.djangoproject.com/en/3.2/topics/install/#installing-official-release).
 
@@ -26,12 +26,12 @@ cd CS50W-Project4-Network
 Setup the database:
 
 ```bash
-python manage.py migrate
+python3 manage.py migrate
 ```
 
 ### 3 - Run
 Run development server:
 ```bash
-python manage.py runserver
+python3 manage.py runserver
 ```
 Visit http://127.0.0.1:8000/
