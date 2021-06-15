@@ -13,7 +13,7 @@ class User(AbstractUser):
         return {
             "id": self.id,
             "name": self.username,
-            "followers_count": self.followers.all().count(),
+            "followers_count": self.followers.first().follower.count(),
             "is_following": True if requester in followers else False,
             "following_count": self.follows.all().count()
         }
